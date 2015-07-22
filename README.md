@@ -143,10 +143,17 @@ Brute-Force Scan (Java version)
 -------------------------------
 There are four Java implementations of Brute-Force Scan. 
 
-+ On Compressed original document vector
-+ On Uncompressed original document vector
-+ On Compressed  document vector of unique terms and their frequencies
-+ On Uncompressed  document vector of unique terms and their frequencies
+Description | java class
+------------|-----------
++ On Compressed original document vector | io.bfscan.ComBFScan
++ On Uncompressed original document vector | io.bfscan.BFScan
++ On Compressed  document vector of unique terms and their frequencies | io.bfscan.ComUniqTermBFScan
++ On Uncompressed  document vector of unique terms and their frequencies | io.bfscan.UniqTermBFScan
+
+**How to run:**
+java -cp <jar file> <appropriate class> <arguments>
+
+If you simply run the code without any arguments, it will tell you the arguments it needs.
 
 
 
