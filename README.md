@@ -141,14 +141,14 @@ Size comparisons, on the entire ClueWeb12 collection:
 
 Brute-Force Scan (Java version)
 -------------------------------
-There are four Java implementations of Brute-Force Scan. 
+There are four Java implementations of Brute-Force Scan depending upon different document representations. 
 
 Description | java class
 ------------|-----------
-+ On Compressed original document vector | io.bfscan.ComBFScan
-+ On Uncompressed original document vector | io.bfscan.BFScan
-+ On Compressed  document vector of unique terms and their frequencies | io.bfscan.ComUniqTermBFScan
-+ On Uncompressed  document vector of unique terms and their frequencies | io.bfscan.UniqTermBFScan
+On Compressed original document vector | io.bfscan.ComBFScan
+On Uncompressed original document vector | io.bfscan.BFScan
+On Compressed  document vector of unique terms and their frequencies | io.bfscan.ComUniqTermBFScan
+On Uncompressed  document vector of unique terms and their frequencies | io.bfscan.UniqTermBFScan
 
 **How to run:**
 java -cp <jar file> <appropriate class> <arguments>
