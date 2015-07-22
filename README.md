@@ -145,10 +145,10 @@ There are four Java implementations of Brute-Force Scan depending upon different
 
 No.|Description | java class
 ---|---------|--------------
-1. | On Compressed original document vector | io.bfscan.ComBFScan
-2. | On Uncompressed original document vector | io.bfscan.BFScan
-3. | On Compressed  document vector of unique terms and their frequencies | io.bfscan.ComUniqTermBFScan
-4. | On Uncompressed  document vector of unique terms and their frequencies | io.bfscan.UniqTermBFScan
+1. | On compressed original document vector | io.bfscan.ComBFScan
+2. | On uncompressed original document vector | io.bfscan.BFScan
+3. | On compressed  document vector of unique terms and their tfs | io.bfscan.ComUniqTermBFScan
+4. | On uncompressed  document vector of unique terms and their tfs | io.bfscan.UniqTermBFScan
 
 **How to run:**
 
