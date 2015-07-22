@@ -156,6 +156,7 @@ No.|Description | java class
 `java -cp <jar file> <appropriate class> <arguments>`
 
 If you simply run the code without any arguments, it will tell you the arguments it needs.
+Note that you may need to increase java heap size using `-Xmx` option. 
 
 
 
