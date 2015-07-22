@@ -138,6 +138,20 @@ Size comparisons, on the entire ClueWeb12 collection:
 + 0.86 TB: repackaged as `PForDocVector`s
 + ~1.6 TB: uncompressed termids (collection size is ~400 billion terms)
 
+
+Brute-Force Scan (Java version)
+-------------------------------
+There are four Java implementations of Brute-Force Scan. 
+
++ On Compressed original document vector
++ On Uncompressed original document vector
++ On Compressed  document vector of unique terms and their frequencies
++ On Uncompressed  document vector of unique terms and their frequencies
+
+
+
+
+
 License
 -------
 
