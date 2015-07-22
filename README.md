@@ -139,9 +139,10 @@ Size comparisons, on the entire ClueWeb12 collection:
 + ~1.6 TB: uncompressed termids (collection size is ~400 billion terms)
 
 
-Brute-Force Scan (Java version)
--------------------------------
-There are four Java implementations of Brute-Force Scan depending upon different document representations. 
+Brute-Force Scan Document Retrieval(Java version)
+-------------------------------------------------
+There are four Java implementations of Brute-Force Scan based document retrieval depending upon different document representations. 
+In all cases, BM25 retrieval model is used. Document vectors are compressed using `pfor` encoding scheme.
 
 No.|Description | java class
 ---|---------|--------------
