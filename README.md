@@ -139,7 +139,7 @@ Size comparisons, on the entire ClueWeb12 collection:
 + ~1.6 TB: uncompressed termids (collection size is ~400 billion terms)
 
 
-Brute-Force Scan Document Retrieval(Java version)
+Brute-Force Scan Document Retrieval (Java)
 -------------------------------------------------
 There are four Java implementations of Brute-Force Scan based document retrieval depending upon different document representations. 
 In all cases, BM25 retrieval model is used. Document vectors are compressed using `pfor` encoding scheme.
@@ -158,8 +158,29 @@ No.|Description | java class
 If you simply run the code without any arguments, it will tell you the arguments it needs.
 Note that you may need to increase java heap size using `-Xmx` option. 
 
+Brute-Force Scan Document Retrieval (Spark)
+-------------------------------------------------
+As in Java, there are four Spark implementations of Brute-Force Scan. All codes are written in scala.
 
+No.|Description | Spark class
+---|---------|--------------
+1. | On compressed original document vector | io.bfscan.ComBFScanSpark
+2. | On uncompressed original document vector | io.bfscan.BFScanSpark
+3. | On compressed  document vector of unique terms and their tfs | io.bfscan.ComUniqTermBFScanSpark
+4. | On uncompressed  document vector of unique terms and their tfs | io.bfscan.UniqTermBFScanSpark
 
+In addition, the package also contains classes to run Spark in `local` mode. Just add `Local` to the above 
+classes to run it in local mode. For example, `io.bfscan.BFScanSpark.Local` will run Brute-Force Scan on
+uncompressed original document vector.
+
+**How to run:**
+
+Mode|  Command
+----|---------
+Cluster | `spark-submit --class <appropriate class> --num-executors 100 --executor-memory 2G <jar file> <class arguments>`
+Local | `spark-submit --driver-memory 100G --class <appropriate class>  <jar file> <class arguments>`
+
+If you just fire the command, it will tell you the necessary arguments.
 
 
 License
