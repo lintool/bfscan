@@ -178,12 +178,18 @@ uncompressed original document vector on local machine.
 
 In cluster mode:  
 
-`spark-submit --class <appropriate class> --num-executors 100 --executor-memory 2G <jar file> <class arguments>`
+```
+spark-submit --class <appropriate class> --num-executors 100 \ 
+--executor-memory 2G <jar file> <class arguments>
+```
 
 
 In local mode:  
 
-`spark-submit --driver-memory 100G --class <appropriate class> <jar file> <class arguments>`
+```
+spark-submit --driver-memory 100G --class <appropriate class> \ 
+<jar file> <class arguments>`
+```
 
 Enter a particular command, it will tell you the arguments it needs.
 
