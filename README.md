@@ -169,18 +169,18 @@ No.|Description | Spark class
 3. | On compressed  document vector of unique terms and their tfs | io.bfscan.ComUniqTermBFScanSpark
 4. | On uncompressed  document vector of unique terms and their tfs | io.bfscan.UniqTermBFScanSpark
 
-In addition, the package also contains classes to run Spark in `local` mode. Just add `Local` to the above 
-classes to run it in local mode. For example, `io.bfscan.BFScanSpark.Local` will run Brute-Force Scan on
-uncompressed original document vector.
+In addition, the package also contains classes to run Spark in `local` mode. Just add the suffix `Local` to the above 
+classes to run it in local mode. For example, `io.bfscan.BFScanSparkLocal` will run Brute-Force Scan on
+uncompressed original document vector in local machine.
 
 **How to run:**
 
 Mode|  Command
 ----|---------
-Cluster | `spark-submit --class <appropriate class> --num-executors 100 --executor-memory 2G <jar file> <class arguments>`
+Cluster | `spark-submit --class <appropriate class> --num-executors 100 \ --executor-memory 2G <jar file> <class arguments>`
 Local | `spark-submit --driver-memory 100G --class <appropriate class>  <jar file> <class arguments>`
 
-If you just fire the command, it will tell you the necessary arguments.
+Enter a particular command, it will tell you the arguments it needs.
 
 
 License
