@@ -23,12 +23,12 @@ import me.lemire.integercompression.IntegerCODEC;
 import me.lemire.integercompression.VariableByte;
 import tl.lin.data.array.IntArrayWritable;
 
-public class PForDocVector {
-  private static final VariableByte VB = new VariableByte();
-  private static final IntegerCODEC codec =  new Composition(new FastPFOR(), new VariableByte());
+public class MTPForDocVector {
+  private final VariableByte VB = new VariableByte();
+  private final IntegerCODEC codec =  new Composition(new FastPFOR(), new VariableByte());
   private int[] termids;
 
-  public PForDocVector() {}
+  public MTPForDocVector() {}
   
   
   public int[] getTermIds() {
@@ -39,7 +39,7 @@ public class PForDocVector {
     return termids.length;
   }
 
-  public static void fromIntArrayWritable(IntArrayWritable in, PForDocVector doc) {
+  public void fromIntArrayWritable(IntArrayWritable in, MTPForDocVector doc) {
     try {
       int[] compressed = in.getArray();
       IntWrapper inPos = new IntWrapper(1);
@@ -62,7 +62,7 @@ public class PForDocVector {
     }
   }
 
-  public static void toIntArrayWritable(IntArrayWritable ints, int[] termids, int length) {
+  public void toIntArrayWritable(IntArrayWritable ints, int[] termids, int length) {
     // Remember, the number of terms to serialize is length; the array might be longer.
     try {
       if (termids == null) {

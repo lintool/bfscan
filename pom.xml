@@ -1,9 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.clueweb</groupId>
   <artifactId>clueweb-tools</artifactId>
   <packaging>jar</packaging>
-  <version>0.4-SNAPSHOT</version>
+  <version>0.4-SNAPSHOT-bfscan</version>
   <name>clueweb-tools</name>
   <description>Hadoop tools for working with the ClueWeb 2012 collection</description>
   <url>http://clueweb.org/</url>
@@ -17,9 +18,9 @@
   </licenses>
 
   <scm>
-    <connection>scm:git:git@github.com:lintool/clueweb.git</connection>
-    <developerConnection>scm:git:git@github.com:lintool/clueweb.git</developerConnection>
-    <url>git@github.com:lintool/clueweb.git</url>
+    <connection>scm:git:git@github.com:lintool/warcbase.git</connection>
+    <developerConnection>scm:git:git@github.com:lintool/warcbase.git</developerConnection>
+    <url>git@github.com:lintool/warcbase.git</url>
   </scm>
 
   <developers>
@@ -27,6 +28,16 @@
       <id>lintool</id>
       <name>Jimmy Lin</name>
       <email>jimmylin@umd.edu</email>
+    </developer>
+    <developer>
+      <id>milad621</id>
+      <name>Milad Gholami</name>
+      <email>mgholami@cs.umd.edu</email>
+    </developer>
+    <developer>
+      <id>jeffyRao</id>
+      <name>Jinfeng Rao</name>
+      <email>jinfeng@cs.umd.edu</email>
     </developer>
   </developers>
 
@@ -36,81 +47,170 @@
     <version>7</version>
   </parent>
 
-  <profiles>
-    <profile>
-      <id>default</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>appassembler-maven-plugin</artifactId>
-            <version>1.3.1</version>
-            <configuration>
-              <programs>
-                <program>
-                  <mainClass>org.clueweb.clueweb12.app.BuildWarcTrecIdMapping</mainClass>
-                  <name>BuildWarcTrecIdMapping</name>
-                  <jvmSettings>
-                    <maxMemorySize>4g</maxMemorySize>
-                  </jvmSettings>
-                </program>
-              </programs>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.1</version>
-            <configuration>
-              <source>1.6</source>
-              <target>1.6</target>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>2.1</version>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>shade</goal>
-                </goals>
-                <configuration>
-                  <!-- this will create both a normal thin jar and also a fatjar -->
-                  <shadedArtifactAttached>true</shadedArtifactAttached>
-                  <shadedClassifierName>fatjar</shadedClassifierName>
-                  <artifactSet>
-                    <excludes>
-                      <exclude>org.apache.hadoop:*</exclude>
-                    </excludes>
-                  </artifactSet>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>deploy</id>
-      <build />
-    </profile>
-  </profiles>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <jettyVersion>8.1.12.v20130726</jettyVersion>
+    <hadoop.version>2.3.0-cdh5.1.2</hadoop.version>
+    <hbase.version>0.98.1-cdh5.1.2</hbase.version>
+    <zookeeper.version>3.4.5-cdh5.1.2</zookeeper.version>
+    <pig.version>0.12.0-cdh5.1.2</pig.version>
+    <jwat.version>1.0.0</jwat.version>
   </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.2</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <!-- This fixes the issue "Invalid signature file digest for Manifest main attributes"
+                   cf. http://zhentao-li.blogspot.com/2012/06/maven-shade-plugin-invalid-signature.html -->
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+              <!-- this will create both a normal thin jar and also a fatjar -->
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>fatjar</shadedClassifierName>
+              <artifactSet>
+              <!--  <excludes>
+                  <exclude>org.apache.hadoop:*</exclude>
+                </excludes> -->
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>appassembler-maven-plugin</artifactId>
+        <version>1.9</version>
+        <configuration>
+          <extraJvmArguments>-Xms512M -Xmx24576M</extraJvmArguments>
+          <programs>
+            <program>
+              <mainClass>org.warcbase.WarcbaseAdmin</mainClass>
+              <name>WarcbaseAdmin</name>
+            </program>
+            <program>
+              <mainClass>org.warcbase.data.UrlMappingBuilder</mainClass>
+              <name>UrlMappingBuilder</name>
+            </program>
+            <program>
+              <mainClass>org.warcbase.data.UrlMapping</mainClass>
+              <name>UrlMapping</name>
+            </program>
+            <program>
+              <mainClass>org.warcbase.data.ExtractLinks</mainClass>
+              <name>ExtractLinks</name>
+            </program>
+            <program>
+              <mainClass>org.warcbase.data.ExtractSiteLinks</mainClass>
+              <name>ExtractSiteLinks</name>
+            </program>
+            <program>
+              <mainClass>org.warcbase.ingest.IngestFiles</mainClass>
+              <name>IngestFiles</name>
+            </program>
+            <program>
+              <mainClass>org.warcbase.ingest.SearchForUrl</mainClass>
+              <name>SearchForUrl</name>
+            </program>
+            <program>
+              <mainClass>org.warcbase.browser.WarcBrowser</mainClass>
+              <name>WarcBrowser</name>
+            </program>
+            <program>
+              <mainClass>org.warcbase.analysis.DetectDuplicates</mainClass>
+              <name>DetectDuplicates</name>
+            </program>
+            <program>
+              <mainClass>org.warcbase.browser.SeleniumBrowser</mainClass>
+              <name>SeleniumBrowser</name>
+            </program>
+          </programs>
+        </configuration>
+      </plugin>
+      <!-- for Scala -->
+      <plugin>
+        <groupId>org.scala-tools</groupId>
+        <artifactId>maven-scala-plugin</artifactId>
+        <version>2.15.2</version>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>add-source</goal>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>scala-test-compile</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <scalaVersion>${scala.version}</scalaVersion>
+          <sendJavaToScalac>true</sendJavaToScalac>
+          <args>
+            <arg>-target:jvm-1.7</arg>
+            <arg>-g:vars</arg>
+            <arg>-deprecation</arg>
+            <arg>-dependencyfile</arg>
+            <arg>${project.build.directory}/.scala_dependencies</arg>
+          </args>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <repositories>
+    <repository>
+      <id>maven</id>
+      <url>http://repo.maven.apache.org/maven2/</url>
+    </repository>
+    <repository>
+      <id>cloudera</id>
+      <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+    </repository>
+    <repository>
+      <id>internetarchive</id>
+      <name>Internet Archive Maven Repository</name>
+      <url>http://builds.archive.org:8080/maven2</url>
+    </repository>
+  </repositories>
 
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -134,6 +234,16 @@
       <version>2.6</version>
     </dependency>
     <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.8</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.7.3</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
       <version>4.3.1</version>
@@ -149,30 +259,98 @@
       <version>4.3.1</version>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>18.0</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-core</artifactId>
-      <version>1.1.2</version>
+      <groupId>tl.lin</groupId>
+      <artifactId>lintools-datatypes</artifactId>
+      <version>1.0.0</version>
     </dependency>
+
+    <!-- Begin: Hadoop-related dependencies -->
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-client</artifactId>
+      <version>${hbase.version}</version>
+      <exclusions>
+        <exclusion><groupId>org.apache.hadoop</groupId><artifactId>hadoop-core</artifactId></exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-server</artifactId>
+      <version>${hbase.version}</version>
+      <exclusions>
+        <exclusion><groupId>org.apache.hadoop</groupId><artifactId>hadoop-core</artifactId></exclusion>
+        <exclusion><groupId>org.mortbay.jetty</groupId><artifactId>servlet-api-2.5</artifactId></exclusion>
+        <exclusion><groupId>javax.servlet</groupId><artifactId>servlet-api</artifactId></exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- See http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH5/latest/CDH-Version-and-Packaging-Information/cdhvd_hadoop_api_dependencies.html -->
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-client</artifactId>
-      <version>1.1.2</version>
+      <version>${hadoop.version}</version>
+      <exclusions>
+        <exclusion><groupId>javax.servlet</groupId><artifactId>servlet-api</artifactId></exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.zookeeper</groupId>
+      <artifactId>zookeeper</artifactId>
+      <version>${zookeeper.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.pig</groupId>
+      <artifactId>pig</artifactId>
+      <version>${pig.version}</version>
+      <exclusions>
+        <exclusion><groupId>org.mortbay.jetty</groupId><artifactId>servlet-api-2.5</artifactId></exclusion>
+        <exclusion><groupId>javax.servlet</groupId><artifactId>servlet-api</artifactId></exclusion>
+      </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.jsoup</groupId>
-      <artifactId>jsoup</artifactId>
-      <version>1.7.2</version>
+      <groupId>org.apache.pig</groupId>
+      <artifactId>pigunit</artifactId>
+      <version>${pig.version}</version>
+      <exclusions>
+        <exclusion><groupId>commons-lang</groupId><artifactId>commons-lang</artifactId></exclusion>
+        <exclusion><groupId>commons-logging</groupId><artifactId>commons-logging</artifactId></exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- End: Hadoop-related dependencies -->
+
+    <dependency>
+      <groupId>org.netpreserve.openwayback</groupId>
+      <artifactId>openwayback-core</artifactId>
+      <version>2.0.0.BETA.2</version>
+      <exclusions>
+        <exclusion><groupId>org.apache.hadoop</groupId><artifactId>hadoop-core</artifactId></exclusion>
+        <exclusion><groupId>ch.qos.logback</groupId><artifactId>logback-classic</artifactId></exclusion>
+        <exclusion><groupId>org.netpreserve.openwayback</groupId><artifactId>openwayback-cdx-server</artifactId></exclusion>
+        <exclusion><groupId>org.netpreserve.openwayback</groupId><artifactId>openwayback-access-control-core</artifactId></exclusion>
+        <!-- swap in our own latest versions -->
+        <exclusion><groupId>it.unimi.dsi</groupId><artifactId>dsiutils</artifactId></exclusion>
+        <exclusion><groupId>fastutil</groupId><artifactId>fastutil</artifactId></exclusion>
+      </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>14.0.1</version>
+      <groupId>org.netpreserve.commons</groupId>
+      <artifactId>webarchive-commons</artifactId>
+      <version>1.1.4</version>
+      <exclusions>
+        <exclusion><groupId>org.apache.hadoop</groupId><artifactId>hadoop-core</artifactId></exclusion>
+        <exclusion><groupId>commons-lang</groupId><artifactId>commons-lang</artifactId></exclusion>
+        <exclusion><groupId>fastutil</groupId><artifactId>fastutil</artifactId></exclusion>
+      </exclusions>
     </dependency>
+
     <dependency>
       <groupId>it.unimi.dsi</groupId>
       <artifactId>dsiutils</artifactId>
@@ -191,6 +369,89 @@
       <version>6.5.4</version>
       <optional>true</optional>
     </dependency>
+    
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
+      <version>${jettyVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-webapp</artifactId>
+      <version>${jettyVersion}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.6.4</version>                        
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-cli</groupId>
+      <artifactId>commons-cli</artifactId>
+      <version>1.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>2.3</version>
+    </dependency>
+
+    <!-- these are needed for the Pig test cases -->
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-core</artifactId>
+      <version>1.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr</artifactId>
+      <version>3.5.2</version>
+    </dependency>
+
+    <!-- download and "mvn install" from here: https://github.com/openplanets/libmagic-jna-wrapper -->
+    <!-- Since this jar isn't published anywhere, removing for now.
+    <dependency>
+      <groupId>org.opf-labs</groupId>
+      <artifactId>libmagic-jna-wrapper</artifactId>
+      <version>0.0.2-SNAPSHOT</version>
+    </dependency>
+    -->
+
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>2.42.2</version>
+      <exclusions>
+        <exclusion><groupId>org.seleniumhq.selenium</groupId><artifactId>selenium-htmlunit-driver</artifactId></exclusion>
+        <exclusion><groupId>org.seleniumhq.selenium</groupId><artifactId>selenium-ie-driver</artifactId></exclusion>
+        <exclusion><groupId>org.webbitserver</groupId><artifactId>webbit</artifactId></exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-parsers</artifactId>
+      <version>1.6</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>2.10.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_2.10</artifactId>
+      <version>1.2.0</version>
+    </dependency>
     <dependency>
       <groupId>tl.lin</groupId>
       <artifactId>lintools-datatypes</artifactId>
@@ -204,7 +465,7 @@
     <dependency>
       <groupId>me.lemire.integercompression</groupId>
       <artifactId>JavaFastPFOR</artifactId>
-       <version>0.0.3</version>
+       <version>0.1.3</version>
     </dependency>
   </dependencies>
 </project>

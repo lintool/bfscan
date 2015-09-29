@@ -49,7 +49,7 @@ public class PForDocVectorTest {
     }
   }
 
-  @Test
+ /* @Test
   public void testPFor2() throws Exception {
     int len = 23;
     FastPFOR p4 = new FastPFOR();
@@ -216,5 +216,5 @@ public class PForDocVectorTest {
 
   public static junit.framework.Test suite() {
     return new JUnit4TestAdapter(PForDocVectorTest.class);
-  }
+  }*/
 }

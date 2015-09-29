@@ -138,6 +138,62 @@ Size comparisons, on the entire ClueWeb12 collection:
 + 0.86 TB: repackaged as `PForDocVector`s
 + ~1.6 TB: uncompressed termids (collection size is ~400 billion terms)
 
+
+Brute-Force Scan Document Retrieval (Java)
+-------------------------------------------------
+There are four Java implementations of Brute-Force Scan based document retrieval depending upon different document representations. 
+In all cases, BM25 retrieval model is used. Document vectors are compressed using `pfor` encoding scheme.
+
+No.|Description | java class
+---|---------|--------------
+1. | On compressed original document vector | io.bfscan.ComBFScan
+2. | On uncompressed original document vector | io.bfscan.BFScan
+3. | On compressed  document vector of unique terms and their tfs | io.bfscan.ComUniqTermBFScan
+4. | On uncompressed  document vector of unique terms and their tfs | io.bfscan.UniqTermBFScan
+
+**How to run:**
+
+`java -cp <jar file> <appropriate class> <arguments>`
+
+If you simply run the code without any arguments, it will tell you the arguments it needs.
+Note that you may need to increase java heap size using `-Xmx` option. 
+
+Brute-Force Scan Document Retrieval (Spark)
+-------------------------------------------------
+As in Java, there are four Spark implementations of Brute-Force Scan. All codes are written in scala.
+
+No.|Description | Spark class
+---|---------|--------------
+1. | On compressed original document vector | io.bfscan.ComBFScanSpark
+2. | On uncompressed original document vector | io.bfscan.BFScanSpark
+3. | On compressed  document vector of unique terms and their tfs | io.bfscan.ComUniqTermBFScanSpark
+4. | On uncompressed  document vector of unique terms and their tfs | io.bfscan.UniqTermBFScanSpark
+
+In addition, the package also contains classes to run Spark in `local` mode. Just add the suffix `Local` to the above 
+classes to run it in local mode. For example, `io.bfscan.BFScanSparkLocal` will run Brute-Force Scan on
+uncompressed original document vector on local machine.
+
+**How to run:**
+
+
+In cluster mode:  
+
+```
+spark-submit --class <appropriate class> --num-executors 100 \ 
+--executor-memory 2G <jar file> <class arguments>
+```
+
+
+In local mode:  
+
+```
+spark-submit --driver-memory 100G --class <appropriate class> \ 
+<jar file> <class arguments>`
+```
+
+Enter a particular command, it will tell you the arguments it needs.
+
+
 License
 -------
 
