@@ -41,8 +41,8 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
-public class CountWarcRecordsNew extends Configured implements Tool {
-  private static final Logger LOG = Logger.getLogger(CountWarcRecordsNew.class);
+public class CountWarcRecords extends Configured implements Tool {
+  private static final Logger LOG = Logger.getLogger(CountWarcRecords.class);
 
   private static enum Records { TOTAL, PAGES };
 
@@ -60,7 +60,7 @@ public class CountWarcRecordsNew extends Configured implements Tool {
     }
   }
 
-  public CountWarcRecordsNew() {}
+  public CountWarcRecords() {}
 
   public static final String INPUT_OPTION = "input";
 
@@ -95,11 +95,12 @@ public class CountWarcRecordsNew extends Configured implements Tool {
 
     String input = cmdline.getOptionValue(INPUT_OPTION);
 
-    LOG.info("Tool name: " + CountWarcRecordsNew.class.getSimpleName());
+    LOG.info("Tool name: " + CountWarcRecords.class.getSimpleName());
     LOG.info(" - input: " + input);
 
-    Job job = new Job(getConf(), CountWarcRecordsNew.class.getSimpleName() + ":" + input);
-    job.setJarByClass(CountWarcRecordsNew.class);
+    Job job = Job.getInstance(getConf());
+    job.setJobName(CountWarcRecords.class.getSimpleName() + ":" + input);
+    job.setJarByClass(CountWarcRecords.class);
     job.setNumReduceTasks(0);
 
     FileInputFormat.addInputPaths(job, input);
@@ -121,8 +122,8 @@ public class CountWarcRecordsNew extends Configured implements Tool {
    * Dispatches command-line arguments to the tool via the <code>ToolRunner</code>.
    */
   public static void main(String[] args) throws Exception {
-    LOG.info("Running " + CountWarcRecordsNew.class.getCanonicalName() + " with args "
+    LOG.info("Running " + CountWarcRecords.class.getCanonicalName() + " with args "
         + Arrays.toString(args));
-    ToolRunner.run(new CountWarcRecordsNew(), args);
+    ToolRunner.run(new CountWarcRecords(), args);
   }
 }

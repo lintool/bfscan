@@ -98,7 +98,8 @@ public class CountWarcRecords extends Configured implements Tool {
     LOG.info("Tool name: " + CountWarcRecords.class.getSimpleName());
     LOG.info(" - input: " + input);
 
-    Job job = new Job(getConf(), CountWarcRecords.class.getSimpleName() + ":" + input);
+    Job job = Job.getInstance(getConf());
+    job.setJobName(CountWarcRecords.class.getSimpleName() + ":" + input);
     job.setJarByClass(CountWarcRecords.class);
     job.setNumReduceTasks(0);
 
