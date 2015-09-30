@@ -8,24 +8,20 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Writable;
-import org.apache.pig.data.Tuple;
-import org.apache.pig.data.TupleFactory;
 
 import tl.lin.data.array.IntArrayWritable;
-
-import org.clueweb.dictionary.*;
-import org.clueweb.data.TermStatistics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import io.bfscan.data.TermStatistics;
+import io.bfscan.dictionary.*;
 import io.bfscan.query.*;
 
 public class ComBFScan {
 
-  private static final TupleFactory TUPLE_FACTORY = TupleFactory.getInstance();
   private ComBFScan() {}
   public static  ComKeyValue[] data = new ComKeyValue[1000000000];
   public static int numDocRead = 0;
@@ -146,17 +142,8 @@ public class ComBFScan {
     IntArrayWritable value;
     int n = 0;
     try {
-      if ( Tuple.class.isAssignableFrom(reader.getKeyClass())) {
-        key = TUPLE_FACTORY.newTuple();
-      } else {
-        key = (Writable) reader.getKeyClass().newInstance();
-      }
-
-      if ( Tuple.class.isAssignableFrom(reader.getValueClass())) {
-        value = (IntArrayWritable) TUPLE_FACTORY.newTuple();
-      } else {
-        value = (IntArrayWritable) reader.getValueClass().newInstance();
-      }
+      key = (Writable) reader.getKeyClass().newInstance();
+      value = (IntArrayWritable) reader.getValueClass().newInstance();
 
       while (reader.next(key, value)) {
         data[numDocRead] = new ComKeyValue(key.toString(), value);

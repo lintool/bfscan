@@ -3,7 +3,8 @@ package io.bfscan;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
-import org.clueweb.data.*;
+
+import io.bfscan.data.*;
 import io.bfscan.query.*;
 
 public class ComRankerThread implements Runnable {
