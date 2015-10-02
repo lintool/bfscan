@@ -21,7 +21,7 @@ import org.apache.hadoop.io.Writable;
 /**
  * A document that can be indexed.
  */
-public abstract class Indexable implements Writable {
+public abstract class WarcRecord implements Writable {
 
   /**
    * Returns the globally-unique String identifier of the document within the collection.

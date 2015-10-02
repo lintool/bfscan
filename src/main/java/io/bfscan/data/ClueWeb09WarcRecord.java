@@ -61,7 +61,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class ClueWeb09WarcRecord extends Indexable {
+public class ClueWeb09WarcRecord extends WarcRecord {
 
 	public static String WARC_VERSION = "WARC/0.18";
 	public static String WARC_VERSION_LINE = "WARC/0.18\n";

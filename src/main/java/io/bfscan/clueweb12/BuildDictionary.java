@@ -277,13 +277,13 @@ public class BuildDictionary extends Configured implements Tool {
     conf.set(HADOOP_OUTPUT_OPTION, output);
     conf.setInt(HADOOP_TERMS_COUNT_OPTION,
         Integer.parseInt(cmdline.getOptionValue(COUNT_OPTION)));
-    conf.set("mapreduce.map.memory.mb", "2048");
-    conf.set("mapreduce.map.java.opts", "-Xmx2048m");
-    conf.set("mapreduce.reduce.memory.mb", "2048");
-    conf.set("mapreduce.reduce.java.opts", "-Xmx2048m");
+    conf.set("mapreduce.map.memory.mb", "4096");
+    conf.set("mapreduce.map.java.opts", "-Xmx4096m");
+    conf.set("mapreduce.reduce.memory.mb", "4096");
+    conf.set("mapreduce.reduce.java.opts", "-Xmx4096m");
 
-    Job job = new Job(conf, BuildDictionary.class.getSimpleName() + ":" + input);
-
+    Job job = Job.getInstance(conf);
+    job.setJobName(BuildDictionary.class.getSimpleName() + ":" + input);
     job.setJarByClass(BuildDictionary.class);
     job.setNumReduceTasks(1);
 
