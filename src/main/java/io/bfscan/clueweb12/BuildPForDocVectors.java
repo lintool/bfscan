@@ -59,6 +59,10 @@ public class BuildPForDocVectors extends Configured implements Tool {
     TOTAL, PAGES, ERRORS, TOO_LONG
   };
 
+  private static enum Terms {
+    TOTAL
+  };
+
   private static Analyzer ANALYZER;
 
   private static final int MAX_DOC_LENGTH = 512 * 1024; // Skip document if long than this.
@@ -124,6 +128,7 @@ public class BuildPForDocVectors extends Configured implements Tool {
 
           PForDocVector.toIntArrayWritable(DOC, termids, len);
           context.write(DOCID, DOC);
+          context.getCounter(Terms.TOTAL).increment(len);
         } catch (Exception e) {
           // If Jsoup throws any exceptions, catch and move on, but emit empty doc.
           LOG.info("Error caught processing " + docid);
@@ -185,7 +190,8 @@ public class BuildPForDocVectors extends Configured implements Tool {
     String dictionary = cmdline.getOptionValue(DICTIONARY_OPTION);
     String preprocessing = cmdline.getOptionValue(PREPROCESSING);
 
-    Job job = new Job(getConf(), BuildPForDocVectors.class.getSimpleName() + ":" + input);
+    Job job = Job.getInstance(getConf());
+    job.setJobName(BuildPForDocVectors.class.getSimpleName() + ":" + input);
     job.setJarByClass(BuildPForDocVectors.class);
 
     LOG.info("Tool name: " + BuildPForDocVectors.class.getSimpleName());

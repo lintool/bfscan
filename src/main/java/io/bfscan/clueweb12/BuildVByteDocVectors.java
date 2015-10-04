@@ -59,6 +59,10 @@ public class BuildVByteDocVectors extends Configured implements Tool {
     TOTAL, PAGES, ERRORS, TOO_LONG
   };
 
+  private static enum Terms {
+    TOTAL
+  };
+
   private static Analyzer ANALYZER;
 
   private static final int MAX_DOC_LENGTH = 512 * 1024; // Skip document if long than this.
@@ -124,6 +128,7 @@ public class BuildVByteDocVectors extends Configured implements Tool {
 
           VByteDocVector.toBytesWritable(DOC, termids, len);
           context.write(DOCID, DOC);
+          context.getCounter(Terms.TOTAL).increment(len);
         } catch (Exception e) {
           // If Jsoup throws any exceptions, catch and move on, but emit empty doc.
           LOG.info("Error caught processing " + docid);
@@ -184,7 +189,8 @@ public class BuildVByteDocVectors extends Configured implements Tool {
     String dictionary = cmdline.getOptionValue(DICTIONARY_OPTION);
     String preprocessing = cmdline.getOptionValue(PREPROCESSING);
 
-    Job job = new Job(getConf(), BuildVByteDocVectors.class.getSimpleName() + ":" + input);
+    Job job = Job.getInstance(getConf());
+    job.setJobName(BuildVByteDocVectors.class.getSimpleName() + ":" + input);
     job.setJarByClass(BuildVByteDocVectors.class);
 
     LOG.info("Tool name: " + BuildVByteDocVectors.class.getSimpleName());
