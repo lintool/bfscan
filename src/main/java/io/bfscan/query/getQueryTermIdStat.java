@@ -1,11 +1,11 @@
 package io.bfscan.query;
 
-import org.clueweb.data.TermStatistics;
-import org.clueweb.dictionary.*;
 import org.apache.lucene.analysis.Analyzer;
-import org.clueweb.util.AnalyzerFactory;
 
 import tl.lin.lucene.AnalyzerUtils;
+import io.bfscan.data.TermStatistics;
+import io.bfscan.dictionary.*;
+import io.bfscan.util.AnalyzerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

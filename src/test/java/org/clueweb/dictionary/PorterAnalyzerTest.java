@@ -1,6 +1,7 @@
 package org.clueweb.dictionary;
 
 import static org.junit.Assert.assertEquals;
+import io.bfscan.dictionary.PorterAnalyzer;
 
 import java.util.List;
 

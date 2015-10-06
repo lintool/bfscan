@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-import org.clueweb.data.MTPForDocVector;
+import io.bfscan.data.MTPForDocVector;
 import io.bfscan.query.*;
 import tl.lin.data.array.IntArrayWritable;
 

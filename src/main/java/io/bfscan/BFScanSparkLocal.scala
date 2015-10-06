@@ -10,9 +10,6 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FSDataInputStream
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
-import org.clueweb.clueweb12.app.BuildDictionary
-import org.clueweb.data.TermStatistics
-import org.clueweb.dictionary._
 import java.util.ArrayList
 import java.util.Arrays
 import java.util.Collection
@@ -22,10 +19,13 @@ import java.util.List
 import java.util.Comparator
 import org.apache.hadoop.io.Text
 import org.apache.spark.storage.StorageLevel
-import org.clueweb.data.MTPForDocVector
 import tl.lin.data.array.IntArrayWritable
 import io.bfscan._
 import io.bfscan.query._
+import io.bfscan.clueweb12.BuildDictionary
+import io.bfscan.dictionary._
+import io.bfscan.data.TermStatistics
+import io.bfscan.data.MTPForDocVector
 
 object BFScanSparkLocal {
   def main(args: Array[String]) {

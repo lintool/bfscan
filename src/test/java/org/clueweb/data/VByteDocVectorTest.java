@@ -1,6 +1,7 @@
 package org.clueweb.data;
 
 import static org.junit.Assert.assertEquals;
+import io.bfscan.data.VByteDocVector;
 
 import java.util.Random;
 
