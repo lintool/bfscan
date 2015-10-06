@@ -121,7 +121,7 @@ To build document vectors, use either `BuildVByteDocVectors` or `BuildPForDocVec
 ```
 hadoop jar target/bfscan-0.1-SNAPSHOT-fatjar.jar io.bfscan.clueweb12.BuildVByteDocVectors \
  -input '/collections/ClueWeb12/Disk1/ClueWeb12_*/*/*.warc.gz' \
- -output cw12-docvectors/vbyte/disk1 -reducers 100
+ -output cw12-docvectors/vbyte/disk1 -reducers 100 \
  -dictionary cw12-dictionary -preprocessing porter
 ```
 
