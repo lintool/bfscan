@@ -142,57 +142,89 @@ For reference, there are 344 billion terms in the entire collection when process
 
 Brute-Force Scan Document Retrieval (Java)
 -------------------------------------------------
-There are four Java implementations of Brute-Force Scan based document retrieval depending upon different document representations. 
-In all cases, BM25 retrieval model is used. Document vectors are compressed using `pfor` encoding scheme.
-
-No.|Description | java class
----|---------|--------------
-1. | On compressed original document vector | io.bfscan.ComBFScan
-2. | On uncompressed original document vector | io.bfscan.BFScan
-3. | On compressed  document vector of unique terms and their tfs | io.bfscan.ComUniqTermBFScan
-4. | On uncompressed  document vector of unique terms and their tfs | io.bfscan.UniqTermBFScan
+There are four Java implementations of Brute-Force Scan based document retrieval depending upon different document representations. In all cases, BM25 retrieval model is used. Document vectors are compressed using `pfor` encoding scheme.
 
 **How to run:**
+**1. On uncompressed document as flat array of terms** 
+```
+java -cp target/bfscan-0.1-SNAPSHOT-fatjar.jar io.bfscan.BFScan \
+<document vectors path> <# doc to return> <dictionary path> <# thread> <query file> <# doc in collection>
+```
+**2. On compressed document as flat array of terms** 
+```
+java -cp target/bfscan-0.1-SNAPSHOT-fatjar.jar io.bfscan.ComBFScan \
+<document vectors path> <# doc to return> <dictionary path> <numThread> <query file> <# doc in collection>
+```
+**3. On uncompressed  document vector of unique terms (sorted) and their tfs**
+```
+java -cp target/bfscan-0.1-SNAPSHOT-fatjar.jar io.bfscan.UniqTermBFScan \
+<document vectors path> <# doc to return> <dictionary path> <# thread> <query file> <# doc. in collection>
+```
+**4. On compressed  document vector of unique terms (sorted) and their tfs**
+```
+java -cp target/bfscan-0.1-SNAPSHOT-fatjar.jar io.bfscan.ComUniqTermBFScan \
+<document vectors path> <# doc to return> <dictionary path> <# thread> <query file> <# doc. in collection>
+```
 
-`java -cp <jar file> <appropriate class> <arguments>`
+**Format of the query file:** The query file contains all queries, one line for each query. The line starts with the query number (integer), followed by `colon`, followed by the query words.  Here is an example. 
+```
+15:espn sports
+16:arizona game and fish
+```
 
-If you simply run the code without any arguments, it will tell you the arguments it needs.
-Note that you may need to increase java heap size using `-Xmx` option. 
 
-Brute-Force Scan Document Retrieval (Spark)
+
+Brute-Force Scan Document Retrieval (Spark Cluster)
 -------------------------------------------------
 As in Java, there are four Spark implementations of Brute-Force Scan. All codes are written in scala.
 
-No.|Description | Spark class
----|---------|--------------
-1. | On compressed original document vector | io.bfscan.ComBFScanSpark
-2. | On uncompressed original document vector | io.bfscan.BFScanSpark
-3. | On compressed  document vector of unique terms and their tfs | io.bfscan.ComUniqTermBFScanSpark
-4. | On uncompressed  document vector of unique terms and their tfs | io.bfscan.UniqTermBFScanSpark
+**How to run:**
+**1. On uncompressed document as flat array of terms**
+```
+spark-submit --class io.bfscan.BFScanSpark --num-executors 100 --executor-memory 2G \
+target/bfscan-0.1-SNAPSHOT-fatjar.jar <document vectors path> <dictionary> <query file> <# doc to return>
+```
+**2. On compressed document as flat array of terms**
+```
+spark-submit --class io.bfscan.ComBFScanSpark --num-executors 100 --executor-memory 2G \
+target/bfscan-0.1-SNAPSHOT-fatjar.jar <document vectors path> <dictionary> <query file> <# doc to return>
+```
+**3. On uncompressed  document vector of unique terms (sorted) and their tfs**
+```
+spark-submit --class io.bfscan.UniqTermBFScanSpark --num-executors 100 --executor-memory 2G \
+target/bfscan-0.1-SNAPSHOT-fatjar.jar <document vectors path> <dictionary> <query file> <# doc to return>
+```
+**4. On compressed  document vector of unique terms (sorted) and their tfs**
+```
+spark-submit --class io.bfscan.ComUniqTermBFScanSpark --num-executors 100 --executor-memory 2G \
+target/bfscan-0.1-SNAPSHOT-fatjar.jar <document vectors path> <dictionary> <query file> <# doc to return>
+```
 
-In addition, the package also contains classes to run Spark in `local` mode. Just add the suffix `Local` to the above 
-classes to run it in local mode. For example, `io.bfscan.BFScanSparkLocal` will run Brute-Force Scan on
-uncompressed original document vector on local machine.
+Brute-Force Scan Document Retrieval (Spark Local)
+-------------------------------------------------
+In addition, the package also contains classes to run Spark in `local` mode, meaning instead of running multiple executors on different machines in the cluster, spark will run multiple threads on a local machine. The argument `<# thread>` specifies how many threads spark will use.
 
 **How to run:**
-
-
-In cluster mode:  
-
+**1. On uncompressed document as flat array of terms**
 ```
-spark-submit --class <appropriate class> --num-executors 100 \ 
---executor-memory 2G <jar file> <class arguments>
+spark-submit --class io.bfscan.BFScanSparkLocal --driver-memory 100G \
+target/bfscan-0.1-SNAPSHOT-fatjar.jar <document vectors path> <dictionary> <query file> <# doc to return> <# thread>
 ```
-
-
-In local mode:  
-
+**2. On compressed document as flat array of terms**
 ```
-spark-submit --driver-memory 100G --class <appropriate class> \ 
-<jar file> <class arguments>`
+spark-submit --class io.bfscan.ComBFScanSparkLocal --driver-memory 100G \
+target/bfscan-0.1-SNAPSHOT-fatjar.jar <document vectors path> <dictionary> <query file> <# doc to return> <# thread>
 ```
-
-Enter a particular command, it will tell you the arguments it needs.
+**3. On uncompressed  document vector of unique terms (sorted) and their tfs**
+```
+spark-submit --class io.bfscan.UniqTermBFScanSparkLocal --num-executors 100 --driver-memory 100G \
+target/bfscan-0.1-SNAPSHOT-fatjar.jar <document vectors path> <dictionary> <query file> <# doc to return> <# thread>
+```
+**4. On compressed  document vector of unique terms (sorted) and their tfs**
+```
+spark-submit --class io.bfscan.ComUniqTermBFScanSparkLocal --driver-memory 100G \
+target/bfscan-0.1-SNAPSHOT-fatjar.jar <document vectors path> <dictionary> <query file> <# doc to return> <# thread>
+```
 
 
 License
