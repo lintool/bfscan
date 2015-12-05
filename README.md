@@ -145,11 +145,17 @@ Brute-Force Scan Document Retrieval (Java)
 There are four Java implementations of Brute-Force Scan based document retrieval depending upon different document representations. In all cases, BM25 retrieval model is used. Document vectors are compressed using `pfor` encoding scheme.
 
 **How to run:**
+
 **1. On uncompressed document as flat array of terms** 
 ```
 java -cp target/bfscan-0.1-SNAPSHOT-fatjar.jar io.bfscan.BFScan \
 <document vectors path> <# doc to return> <dictionary path> <# thread> <query file> <# doc in collection>
+
+Example:
+java -cp target/bfscan-0.1-SNAPSHOT-fatjar.jar io.bfscan.BFScan \
+/scratch1/jiaul/bfscan/docvectors-cw09b 1000 /scratch1/jiaul/bfscan/dictionary-cw09b 40 /scratch1/jiaul/bfscan/cw09-topics 56000000
 ```
+
 **2. On compressed document as flat array of terms** 
 ```
 java -cp target/bfscan-0.1-SNAPSHOT-fatjar.jar io.bfscan.ComBFScan \
@@ -179,10 +185,15 @@ Brute-Force Scan Document Retrieval (Spark Cluster)
 As in Java, there are four Spark implementations of Brute-Force Scan. All codes are written in scala.
 
 **How to run:**
+
 **1. On uncompressed document as flat array of terms**
 ```
 spark-submit --class io.bfscan.BFScanSpark --num-executors 100 --executor-memory 2G \
 target/bfscan-0.1-SNAPSHOT-fatjar.jar <document vectors path> <dictionary> <query file> <# doc to return>
+
+Example:
+spark-submit --class io.bfscan.BFScanSpark --num-executors 100 --executor-memory 2G target/bfscan-0.1-SNAPSHOT-fatjar.jar \
+/user/jiaul/docvectors-cw09b /user/jiaul/dictionary-cw09b /user/jiaul/cw09.topics 1000
 ```
 **2. On compressed document as flat array of terms**
 ```
@@ -205,10 +216,15 @@ Brute-Force Scan Document Retrieval (Spark Local)
 In addition, the package also contains classes to run Spark in `local` mode, meaning instead of running multiple executors on different machines in the cluster, spark will run multiple threads on a local machine. The argument `<# thread>` specifies how many threads spark will use.
 
 **How to run:**
+
 **1. On uncompressed document as flat array of terms**
 ```
 spark-submit --class io.bfscan.BFScanSparkLocal --driver-memory 100G \
 target/bfscan-0.1-SNAPSHOT-fatjar.jar <document vectors path> <dictionary> <query file> <# doc to return> <# thread>
+
+Example:
+spark-submit --class io.bfscan.BFScanSparkLocal --driver-memory 100G target/bfscan-0.1-SNAPSHOT-fatjar.jar \
+/scratch1/jiaul/bfscan/docvectors-cw09b /scratch1/jiaul/bfscan/dictionary-cw09b /scratch1/jiaul/bfscan/cw09-topics 1000 40
 ```
 **2. On compressed document as flat array of terms**
 ```
